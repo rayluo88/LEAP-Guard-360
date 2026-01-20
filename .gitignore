@@ -23,3 +23,13 @@ venv/
 # Model artifacts (large files)
 *.pt
 *.pkl
+
+# AI/LLM config files
+CLAUDE.md
+AGENT.md
+.claude/
+.cursorrules
+.cursor/
+.aider*
+.continue/
+copilot-instructions.md
