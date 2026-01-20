@@ -39,7 +39,7 @@ if torch.cuda.is_available():
 
 **Step 1:** Download FD001 subset
 ```python
-!wget -q https://ti.arc.nasa.gov/c/6/ -O CMAPSSData.zip
+!wget -q "https://phm-datasets.s3.amazonaws.com/NASA/6.+Turbofan+Engine+Degradation+Simulation+Data+Set.zip" -O CMAPSSData.zip
 !unzip -q CMAPSSData.zip -d data/
 ```
 
