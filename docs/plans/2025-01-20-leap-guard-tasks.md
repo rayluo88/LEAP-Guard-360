@@ -58,12 +58,21 @@ print(f"Engines: {train_df['unit'].nunique()}")  # Expected: 100
 
 ### Task 1.3: Preprocess Data
 
-**Step 1:** Identify and drop constant sensors
+**Step 1:** Check variance and drop constant sensors
 ```python
-# Sensors with near-zero variance in FD001
-drop_cols = ['op3', 's1', 's5', 's6', 's10', 's16', 's18', 's19']
-feature_cols = [c for c in train_df.columns if c.startswith('s') and c not in drop_cols]
-print(f"Features: {len(feature_cols)}")  # Expected: 14
+# Check variance of all sensor columns
+sensor_cols = [c for c in train_df.columns if c.startswith('s') or c.startswith('op')]
+variances = train_df[sensor_cols].var().sort_values()
+print("Variance per column (lowest first):")
+print(variances)
+
+# Drop columns with variance < 0.0001 (effectively constant)
+low_var_cols = variances[variances < 0.0001].index.tolist()
+print(f"\nDropping low-variance columns: {low_var_cols}")
+
+# Keep only sensor columns with meaningful variance
+feature_cols = [c for c in train_df.columns if c.startswith('s') and c not in low_var_cols]
+print(f"Features to use: {len(feature_cols)} -> {feature_cols}")
 ```
 
 **Step 2:** Normalize with MinMaxScaler
