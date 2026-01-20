@@ -41,7 +41,7 @@ For a demo, FD001 proves the concept cleanly. Production would use FD004.
 
 4. **Split by engine unit, not rows** — If you random-split rows, cycles 45-50 from Engine #3 might be in training while cycles 40-45 are in validation. The model "memorizes" engine-specific patterns → inflated val accuracy that won't generalize.
 
-**Final feature set (14 sensors):**
+**Final feature set (13 sensors after variance filtering):**
 | Sensor | Physical Meaning | Why Kept |
 |--------|------------------|----------|
 | T24 | LPC outlet temp | Early compressor health indicator |
@@ -75,7 +75,7 @@ LSTM(32, batch_first=True)       ← Begins reconstruction
     ↓
 LSTM(64, batch_first=True)       ← Mirror of encoder
     ↓
-Linear(14)                       ← Reconstructs all 14 features per timestep
+Linear(n_features)               ← Reconstructs all features per timestep
 ```
 
 **PyTorch Model Definition:**
@@ -120,7 +120,7 @@ class LSTMAutoencoder(nn.Module):
 | Choice | Reasoning |
 |--------|-----------|
 | **LSTM over GRU** | Slightly better at long sequences (50 steps); negligible speed difference at this scale |
-| **64→32 bottleneck** | Forces compression. 32 dims for 14 features = ~2.3x compression. Too tight (8) loses signal; too loose (64) memorizes noise |
+| **64→32 bottleneck** | Forces compression. 32 dims for 13 features = ~2.5x compression. Too tight (8) loses signal; too loose (64) memorizes noise |
 | **2 layers each side** | 1 layer underfit on validation; 3 layers showed no improvement but doubled training time |
 | **No dropout** | Autoencoders benefit less from dropout; we want faithful reconstruction, not regularized features |
 

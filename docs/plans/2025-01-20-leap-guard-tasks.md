@@ -1463,22 +1463,21 @@ function generateSensorData(totalCycles: number): number[][] {
     const degradation = Math.pow(i / totalCycles, 2); // Exponential degradation
     const noise = () => (Math.random() - 0.5) * 0.1;
 
-    // 14 sensor values with increasing degradation
+    // 13 sensor values (matching model features after variance filtering)
     const reading = [
-      0.5 + degradation * 0.3 + noise(), // T24
-      0.5 + degradation * 0.4 + noise(), // T30 (primary degradation signal)
-      0.5 + degradation * 0.2 + noise(), // T50
-      0.5 + degradation * 0.35 + noise(), // P30
-      0.5 + degradation * 0.15 + noise(), // Ps30
-      0.5 + noise(), // Nf (stable)
-      0.5 + degradation * 0.25 + noise(), // Nc
-      0.5 + degradation * 0.1 + noise(), // phi
-      0.5 + noise(), // BPR (stable)
-      0.5 + degradation * 0.2 + noise(), // htBleed
-      0.5 + noise(), // s2
-      0.5 + noise(), // s3
-      0.5 + noise(), // s4
-      0.5 + degradation * 0.15 + noise(), // s7
+      0.5 + degradation * 0.3 + noise(),  // s1
+      0.5 + noise(),                       // s2 (stable)
+      0.5 + degradation * 0.2 + noise(),  // s5
+      0.5 + degradation * 0.15 + noise(), // s6
+      0.5 + degradation * 0.4 + noise(),  // s7 (primary degradation signal)
+      0.5 + degradation * 0.25 + noise(), // s9
+      0.5 + degradation * 0.1 + noise(),  // s10
+      0.5 + degradation * 0.2 + noise(),  // s11
+      0.5 + degradation * 0.35 + noise(), // s12
+      0.5 + noise(),                       // s13 (stable)
+      0.5 + degradation * 0.15 + noise(), // s15
+      0.5 + noise(),                       // s18 (stable)
+      0.5 + noise(),                       // s19 (stable)
     ];
 
     data.push(reading);
