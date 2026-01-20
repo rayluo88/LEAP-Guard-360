@@ -22,7 +22,7 @@ venv/
 
 # Model artifacts (large files)
 *.pt
-*.pkl
+#*.pkl
 
 # AI/LLM config files
 CLAUDE.md

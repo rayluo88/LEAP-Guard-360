@@ -176,19 +176,19 @@ In aviation maintenance, a false negative (missed degradation) is far costlier t
 ### 1.6 Model Export
 
 **Artifacts to save:**
-1. `model.pt` — PyTorch state dict (weights only, architecture defined in code)
-2. `scaler.pkl` — Fitted MinMaxScaler (needed at inference)
+1. `leap_guard_model.pth` — PyTorch state dict (weights only, architecture defined in code)
+2. `leap_guard_scaler.pkl` — Fitted MinMaxScaler (needed at inference)
 3. `threshold.json` — Computed anomaly threshold value
 4. `config.json` — Feature list, window size, sensor order
 
 **Export code:**
 ```python
 # Save model weights
-torch.save(model.state_dict(), 'model.pt')
+torch.save(model.state_dict(), 'leap_guard_model.pth')
 
 # Save scaler
 import pickle
-with open('scaler.pkl', 'wb') as f:
+with open('leap_guard_scaler.pkl', 'wb') as f:
     pickle.dump(scaler, f)
 
 # Save threshold
@@ -266,10 +266,10 @@ backend/
 │   ├── bedrock_client.py   # GenAI diagnosis calls
 │   └── schemas.py          # Pydantic request/response models
 ├── model/
-│   ├── model.pt            # Trained LSTM-Autoencoder (PyTorch state_dict)
-│   ├── scaler.pkl          # Fitted MinMaxScaler
-│   ├── threshold.json      # Anomaly threshold
-│   └── config.json         # Feature config
+│   ├── leap_guard_model.pth   # Trained LSTM-Autoencoder (PyTorch state_dict)
+│   ├── leap_guard_scaler.pkl  # Fitted MinMaxScaler
+│   ├── threshold.json         # Anomaly threshold
+│   └── config.json            # Feature config
 ├── tests/
 │   ├── test_inference.py
 │   └── test_handler.py
@@ -407,10 +407,10 @@ class AnomalyDetector:
             n_features=self.config["n_features"],
             seq_len=self.config["window_size"]
         )
-        self.model.load_state_dict(torch.load(f"{model_dir}/model.pt", map_location="cpu"))
+        self.model.load_state_dict(torch.load(f"{model_dir}/leap_guard_model.pth", map_location="cpu"))
         self.model.eval()
 
-        with open(f"{model_dir}/scaler.pkl", "rb") as f:
+        with open(f"{model_dir}/leap_guard_scaler.pkl", "rb") as f:
             self.scaler = pickle.load(f)
 
         with open(f"{model_dir}/threshold.json", "r") as f:
@@ -1041,7 +1041,7 @@ body {
 ### Phase 1 Checklist
 - [ ] Model trains without errors in Colab
 - [ ] Reconstruction error clearly separates healthy vs degraded cycles
-- [ ] Model file exported and downloadable (`model.pt`, < 10MB)
+- [ ] Model file exported and downloadable (`leap_guard_model.pth`, < 10MB)
 - [ ] Test inference runs locally with sample data
 
 ### Phase 2 Checklist

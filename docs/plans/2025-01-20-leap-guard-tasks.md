@@ -235,14 +235,14 @@ plt.savefig('error_distribution.png')
 **Step 1:** Save model
 ```python
 import os
-torch.save(model.cpu().state_dict(), 'model.pt')
-print(f"Model size: {os.path.getsize('model.pt') / 1e6:.1f} MB")
+torch.save(model.cpu().state_dict(), 'leap_guard_model.pth')
+print(f"Model size: {os.path.getsize('leap_guard_model.pth') / 1e6:.1f} MB")
 ```
 
 **Step 2:** Save scaler
 ```python
 import pickle
-with open('scaler.pkl', 'wb') as f:
+with open('leap_guard_scaler.pkl', 'wb') as f:
     pickle.dump(scaler, f)
 ```
 
@@ -267,8 +267,8 @@ with open('config.json', 'w') as f:
 **Step 5:** Download all artifacts
 ```python
 from google.colab import files
-files.download('model.pt')
-files.download('scaler.pkl')
+files.download('leap_guard_model.pth')
+files.download('leap_guard_scaler.pkl')
 files.download('threshold.json')
 files.download('config.json')
 ```
@@ -429,8 +429,8 @@ git commit -m "feat: add Pydantic request/response schemas with validation"
 **Step 1:** Copy model artifacts to backend/model/
 
 ```bash
-cp ~/Downloads/model.pt backend/model/
-cp ~/Downloads/scaler.pkl backend/model/
+cp ~/Downloads/leap_guard_model.pth backend/model/
+cp ~/Downloads/leap_guard_scaler.pkl backend/model/
 cp ~/Downloads/threshold.json backend/model/
 cp ~/Downloads/config.json backend/model/
 ```
@@ -517,10 +517,10 @@ class AnomalyDetector:
             n_features=self.config["n_features"],
             seq_len=self.config["window_size"]
         )
-        self.model.load_state_dict(torch.load(f"{model_dir}/model.pt", map_location="cpu"))
+        self.model.load_state_dict(torch.load(f"{model_dir}/leap_guard_model.pth", map_location="cpu"))
         self.model.eval()
 
-        with open(f"{model_dir}/scaler.pkl", "rb") as f:
+        with open(f"{model_dir}/leap_guard_scaler.pkl", "rb") as f:
             self.scaler = pickle.load(f)
 
         with open(f"{model_dir}/threshold.json", "r") as f:

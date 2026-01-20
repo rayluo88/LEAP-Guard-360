@@ -238,7 +238,7 @@ The model is trained on the **NASA Commercial Modular Aero-Propulsion System Sim
 **✓ Phase 1 Verification Checklist:**
 - [ ] Model trains without errors in Colab
 - [ ] Reconstruction error clearly separates healthy vs degraded cycles
-- [ ] Model file exported and downloadable (`model.pt`, < 50MB)
+- [ ] Model file exported and downloadable (`leap_guard_model.pth`, < 50MB)
 - [ ] Test inference runs locally with sample data
 
 ### Phase 2: Backend & Cloud

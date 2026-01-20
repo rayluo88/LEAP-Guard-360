@@ -1,0 +1,4 @@
+{
+    "threshold_mae": 0.12164157629013062,
+    "description": "Calculated as Max MAE of Training Data + 5% buffer"
+}

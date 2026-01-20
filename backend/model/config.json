@@ -1,0 +1,22 @@
+{
+    "model_name": "LEAP-Guard LSTM Autoencoder",
+    "version": "1.0",
+    "input_sequence_length": 10,
+    "n_features": 8,
+    "feature_columns": [
+        "T25_LPC_Temp",
+        "T3_HPC_Temp",
+        "T49_EGT",
+        "P3_HPC_Pressure",
+        "N1_Fan_RPM",
+        "N2_Core_RPM",
+        "N1_Vib_Units",
+        "Oil_Pressure_PSI"
+    ],
+    "sensor_mapping_display": {
+        "T25_LPC_Temp": "LPC Outlet Temp (C)",
+        "T49_EGT": "Exhaust Gas Temp (C)",
+        "N1_Vib_Units": "Fan Vibration (Units)",
+        "Oil_Pressure_PSI": "Oil Pressure (PSI)"
+    }
+}
