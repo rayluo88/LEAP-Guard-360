@@ -97,16 +97,18 @@ def create_sequences(df, seq_length=50, healthy_pct=0.2):
     return np.array(sequences)
 
 X_train = create_sequences(train_df)
-print(f"Training sequences: {X_train.shape}")  # Expected: (~1500, 50, 14)
+print(f"Training sequences: {X_train.shape}")  # Expected: (626, 50, 13)
 ```
 
-**Step 4:** Split by engine unit
+**Step 4:** Split by engine unit (random, reproducible)
 ```python
 from sklearn.model_selection import train_test_split
 
-# Use 80% of engines for training, 20% for validation
-train_units = train_df['unit'].unique()[:80]
-val_units = train_df['unit'].unique()[80:]
+# Split engine units 80/20 (not rows - prevents data leakage)
+all_units = train_df['unit'].unique()
+train_units, val_units = train_test_split(all_units, test_size=0.2, random_state=42)
+
+print(f"Train engines: {len(train_units)}, Val engines: {len(val_units)}")
 
 X_train = create_sequences(train_df[train_df['unit'].isin(train_units)])
 X_val = create_sequences(train_df[train_df['unit'].isin(val_units)])
