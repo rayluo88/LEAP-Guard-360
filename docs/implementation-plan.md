@@ -8,15 +8,15 @@
 
 ---
 
-## Phase 1: Data & Model
+## Phase 1: Data & Model ✅
 
-### 1.1 Environment Setup
+### 1.1 Environment Setup ✅
 - **Google Colab (T4 GPU)** — Free, sufficient for this model size (~500K params). No local GPU required.
 - **PyTorch 2.x** — Widely used in ML research, flexible architecture, good Lambda support.
 
 ---
 
-### 1.2 CMAPSS Data Acquisition & Preprocessing
+### 1.2 CMAPSS Data Acquisition & Preprocessing ✅
 
 **Why FD001 subset?**
 | Subset | Operating Conditions | Fault Modes | Why/Why Not |
@@ -60,7 +60,7 @@ Dropped sensors (1, 5, 6, 10, 16, 18, 19) show `std < 0.001` — physically cons
 
 ---
 
-### 1.3 LSTM-Autoencoder Architecture
+### 1.3 LSTM-Autoencoder Architecture ✅
 
 ```
 Input (50, 14)
@@ -136,7 +136,7 @@ class LSTMAutoencoder(nn.Module):
 
 ---
 
-### 1.4 Anomaly Detection Logic
+### 1.4 Anomaly Detection Logic ✅
 
 **How it works:**
 1. Train autoencoder on **healthy cycles only** (first 20% of each engine's life)
@@ -153,7 +153,7 @@ If you train on full degradation curves, the model learns to reconstruct *both* 
 
 ---
 
-### 1.5 Validation Metrics
+### 1.5 Validation Metrics ✅
 
 **Primary metrics:**
 
@@ -173,7 +173,7 @@ In aviation maintenance, a false negative (missed degradation) is far costlier t
 
 ---
 
-### 1.6 Model Export
+### 1.6 Model Export ✅
 
 **Artifacts to save:**
 1. `leap_guard_model.pth` — PyTorch state dict (weights only, architecture defined in code)
@@ -211,7 +211,7 @@ with open('config.json', 'w') as f:
 
 ## Phase 2: Backend & Cloud
 
-### 2.1 AWS Account & Bedrock Setup
+### 2.1 AWS Account & Bedrock Setup ✅
 
 **One-time setup steps:**
 
@@ -255,7 +255,7 @@ with open('config.json', 'w') as f:
 
 ---
 
-### 2.2 Project Structure
+### 2.2 Project Structure ✅
 
 ```
 backend/
@@ -292,7 +292,7 @@ backend/
 
 ---
 
-### 2.3 Lambda Handler & Inference Code
+### 2.3 Lambda Handler & Inference Code ✅
 
 **`handler.py` — Lambda entry point:**
 
@@ -494,7 +494,7 @@ class PredictResponse(BaseModel):
 
 ---
 
-### 2.4 Bedrock Integration
+### 2.4 Bedrock Integration ✅
 
 **`bedrock_client.py` — GenAI diagnosis:**
 
@@ -1039,16 +1039,16 @@ body {
 ## Verification Checklists
 
 ### Phase 1 Checklist
-- [ ] Model trains without errors in Colab
-- [ ] Reconstruction error clearly separates healthy vs degraded cycles
-- [ ] Model file exported and downloadable (`leap_guard_model.pth`, < 10MB)
-- [ ] Test inference runs locally with sample data
+- [x] Model trains without errors in Colab
+- [x] Reconstruction error clearly separates healthy vs degraded cycles
+- [x] Model file exported and downloadable (`leap_guard_model.pth`, < 10MB)
+- [x] Test inference runs locally with sample data
 
 ### Phase 2 Checklist
 - [ ] Docker container builds and runs locally
 - [ ] Lambda responds to test payload via SAM CLI
 - [ ] Lambda deployed and returns 200 from Function URL
-- [ ] Bedrock call works and returns diagnosis text
+- [x] Bedrock call works and returns diagnosis text (mock mode tested)
 - [ ] CloudWatch logs visible and showing execution details
 
 ### Phase 3 Checklist

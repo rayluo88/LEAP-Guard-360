@@ -25,7 +25,7 @@ venv/
 #*.pkl
 
 # AI/LLM config files
-CLAUDE.md
+#CLAUDE.md
 AGENT.md
 .claude/
 .cursorrules

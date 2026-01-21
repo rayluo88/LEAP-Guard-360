@@ -59,6 +59,12 @@ Architecture designed for <$0.10/month using AWS Free Tier + on-demand pricing. 
 - `docs/AWS_Options.md` - Architecture cost comparison
 - `docs/JD.md` - Target job description for alignment
 
+## Implementation Progress Tracking
+
+Progress is tracked in `docs/implementation-plan.md`:
+- Add ✅ next to completed task/section titles
+- Update verification checklists at the bottom of the file
+
 ## Design Decisions
 
 - **Lambda over SageMaker:** Cost optimization for demo; shows FinOps awareness
