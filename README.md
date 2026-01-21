@@ -36,7 +36,7 @@ This project demonstrates production-grade ML engineering practices for the avia
 | Capability | Implementation |
 |------------|----------------|
 | **Anomaly Detection** | LSTM-Autoencoder trained on NASA CMAPSS turbofan dataset |
-| **Explainable AI** | AWS Bedrock (Claude 3 Haiku) generates natural language diagnostics |
+| **Explainable AI** | AWS Bedrock (Claude Haiku 4.5) generates natural language diagnostics |
 | **Cloud Architecture** | Serverless Lambda + S3 with cost optimization (<$0.10/month) |
 | **Frontend** | React + TypeScript dashboard with real-time sensor visualization |
 
@@ -73,7 +73,7 @@ This project demonstrates production-grade ML engineering practices for the avia
 │   │   Dashboard      │────────▶│                                      │    │
 │   │                  │◀────────│  ┌────────────┐    ┌─────────────┐  │    │
 │   │  • Sensor Graphs │  JSON   │  │   LSTM     │    │   Bedrock   │  │    │
-│   │  • Anomaly Viz   │         │  │ Autoencoder│───▶│  (Claude 3) │  │    │
+│   │  • Anomaly Viz   │         │  │ Autoencoder│───▶│(Haiku 4.5)  │  │    │
 │   │  • Chat UI       │         │  └────────────┘    └─────────────┘  │    │
 │   └──────────────────┘         └──────────────────────────────────────┘    │
 │          │                                    │                             │
@@ -105,7 +105,7 @@ This project demonstrates production-grade ML engineering practices for the avia
 | **ML Model** | PyTorch LSTM-Autoencoder | Captures temporal degradation patterns in sequence data |
 | **Training** | Google Colab (T4 GPU) | Free GPU compute for model development |
 | **Backend** | Python 3.12 + Lambda | Serverless inference, zero idle cost |
-| **GenAI** | AWS Bedrock (Claude 3 Haiku) | Low-latency, cost-effective ($0.00025/1K tokens) |
+| **GenAI** | AWS Bedrock (Claude Haiku 4.5) | Low-latency, cost-effective |
 | **Container** | Docker → ECR → Lambda | Reproducible ML environment |
 | **Frontend** | React + TypeScript + Vite | Type-safe, modern tooling |
 | **Visualization** | Recharts | Time-series sensor graphs |
@@ -225,11 +225,11 @@ npm run dev  # http://localhost:5173
 
 **1. Push Docker image to ECR:**
 ```bash
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com
 
 docker build -t leap-guard-inference backend/
-docker tag leap-guard-inference:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/leap-guard-inference:latest
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/leap-guard-inference:latest
+docker tag leap-guard-inference:latest <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest
+docker push <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest
 ```
 
 **2. Deploy Lambda:**

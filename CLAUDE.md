@@ -19,7 +19,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
         │                              │
         ▼                              ▼
 ┌─────────────────┐     ┌─────────────────────────────────────┐
-│  test_data.json │     │  AWS Bedrock (Claude Haiku/Titan)   │
+│  test_data.json │     │  AWS Bedrock (Claude Haiku 4.5)     │
 │  (S3 bucket)    │     │  Natural language anomaly diagnosis │
 └─────────────────┘     └─────────────────────────────────────┘
 ```
@@ -39,7 +39,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Visualization | Recharts | Time-series sensor graphs |
 | Backend | Python + FastAPI/Lambda handler | ML inference |
 | ML Model | PyTorch LSTM-Autoencoder | Anomaly detection |
-| GenAI | AWS Bedrock (Claude Haiku) | Cost-effective diagnostics |
+| GenAI | AWS Bedrock (Claude Haiku 4.5) | Cost-effective diagnostics |
 | Hosting | S3 (frontend) + Lambda (backend) | Serverless, near-zero idle cost |
 | Container | Docker → ECR → Lambda | Portable ML environment |
 

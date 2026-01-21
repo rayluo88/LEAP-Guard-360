@@ -28,7 +28,7 @@
 - [ ] AWS account with billing enabled
 - [ ] Bedrock model access approved (Claude/Titan requires manual request in AWS Console)
 - [ ] IAM user with programmatic access configured locally
-- [ ] Default region set to `us-east-1` (best Bedrock model availability)
+- [ ] Default region set to `ap-southeast-1` (Singapore region for lower latency)
 
 ### Knowledge Assumptions
 - Basic familiarity with React, Python, and AWS Console
@@ -122,7 +122,7 @@ Aircraft technicians and engineers face two critical challenges:
 
 4.  **Generative AI:**
     * **Service:** **AWS Bedrock**.
-    * **Model:** Claude 3 Haiku (Fast & Cheap) or Titan Text.
+    * **Model:** Claude Haiku 4.5 (Fast & Cheap) or Titan Text.
     * **Cost Strategy:** On-Demand pricing. Only pays for tokens used during the demo.
 
 ### 8.2 AWS Infrastructure Configuration
@@ -133,7 +133,7 @@ Aircraft technicians and engineers face two critical challenges:
 | **ECR** | Private repository for inference Docker image |
 | **Endpoint** | Lambda Function URL (simpler than API Gateway, no additional cost) |
 | **IAM Role** | Lambda execution role with `bedrock:InvokeModel`, `logs:CreateLogGroup`, `logs:PutLogEvents` |
-| **Bedrock** | Region: `us-east-1`, Model: `anthropic.claude-3-haiku-20240307-v1:0` |
+| **Bedrock** | Region: `ap-southeast-1`, Model: `anthropic.claude-haiku-4-5-20251015-v1:0` |
 | **S3** | Public bucket for frontend, private bucket for test data |
 
 #### First-Time AWS Setup Checklist
