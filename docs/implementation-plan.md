@@ -234,7 +234,7 @@ with open('config.json', 'w') as f:
       "Action": [
         "bedrock:InvokeModel"
       ],
-      "Resource": "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
+      "Resource": "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-haiku-4-5-20251015-v1:0"
     },
     {
       "Effect": "Allow",
@@ -517,7 +517,7 @@ class BedrockDiagnostics:
             config=config
         )
 
-        self.model_id = "anthropic.claude-3-haiku-20240307-v1:0"
+        self.model_id = "anthropic.claude-haiku-4-5-20251015-v1:0"
         self.mock_mode = os.environ.get("MOCK_BEDROCK", "false").lower() == "true"
 
         self.sensor_descriptions = {
@@ -688,7 +688,7 @@ Resources:
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel
-              Resource: "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
+              Resource: "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-haiku-4-5-20251015-v1:0"
       Environment:
         Variables:
           MOCK_BEDROCK: "false"
