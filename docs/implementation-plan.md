@@ -220,7 +220,7 @@ with open('config.json', 'w') as f:
 | **1. Install AWS CLI v2** | `brew install awscli` | Required for all AWS operations |
 | **2. Create IAM user** | Console → IAM → Users → Create | Programmatic access for CLI |
 | **3. Configure credentials** | `aws configure` | Stores access key in `~/.aws/credentials` |
-| **4. Set default region** | `us-east-1` | Best Bedrock model availability; Claude 3 Haiku available here |
+| **4. Set default region** | `ap-southeast-1` | Best Bedrock model availability; Claude 3 Haiku available here |
 | **5. Request Bedrock access** | Console → Bedrock → Model access → Request | Manual approval required; takes 1-24 hours |
 
 **IAM policy for Lambda execution role:**
@@ -234,7 +234,7 @@ with open('config.json', 'w') as f:
       "Action": [
         "bedrock:InvokeModel"
       ],
-      "Resource": "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
+      "Resource": "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
     },
     {
       "Effect": "Allow",
@@ -513,7 +513,7 @@ class BedrockDiagnostics:
 
         self.client = boto3.client(
             "bedrock-runtime",
-            region_name="us-east-1",
+            region_name="ap-southeast-1",
             config=config
         )
 
@@ -605,7 +605,7 @@ Keep your response under 100 words. Use technical but accessible language suitab
 
 ---
 
-### 2.5 Dockerfile & Containerization
+### 2.5 Dockerfile & Containerization ✅
 
 ```dockerfile
 FROM public.ecr.aws/lambda/python:3.12
@@ -638,18 +638,18 @@ scikit-learn>=1.4.0
 
 ```bash
 # 1. Create ECR repository (one-time)
-aws ecr create-repository --repository-name leap-guard-inference --region us-east-1
+aws ecr create-repository --repository-name leap-guard-inference --region ap-southeast-1
 
 # 2. Authenticate Docker to ECR
-aws ecr get-login-password --region us-east-1 | \
+aws ecr get-login-password --region ap-southeast-1 | \
     docker login --username AWS --password-stdin \
-    <account-id>.dkr.ecr.us-east-1.amazonaws.com
+    <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com
 
 # 3. Build, tag, push
 docker build -t leap-guard-inference .
 docker tag leap-guard-inference:latest \
-    <account-id>.dkr.ecr.us-east-1.amazonaws.com/leap-guard-inference:latest
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/leap-guard-inference:latest
+    <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest
+docker push <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest
 ```
 
 **`template.yaml` — SAM template:**
@@ -669,7 +669,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Image
-      ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/leap-guard-inference:latest"
+      ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest"
       Architectures:
         - x86_64
       FunctionUrlConfig:
@@ -688,7 +688,7 @@ Resources:
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel
-              Resource: "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
+              Resource: "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
       Environment:
         Variables:
           MOCK_BEDROCK: "false"
@@ -733,7 +733,7 @@ aws cloudformation describe-stacks \
     --output text
 
 # Test endpoint
-curl -X POST https://xxx.lambda-url.us-east-1.on.aws/ \
+curl -X POST https://xxx.lambda-url.ap-southeast-1.on.aws/ \
     -H "Content-Type: application/json" \
     -d '{"sensor_readings": [[...]], "window_size": 50, "threshold": 0.7}'
 
@@ -951,7 +951,7 @@ VITE_API_URL=http://localhost:3000
 
 **`.env.production` (deployed):**
 ```
-VITE_API_URL=https://xxx.lambda-url.us-east-1.on.aws/
+VITE_API_URL=https://xxx.lambda-url.ap-southeast-1.on.aws/
 ```
 
 ---
@@ -963,7 +963,7 @@ VITE_API_URL=https://xxx.lambda-url.us-east-1.on.aws/
 npm run build
 
 # Create S3 bucket (one-time)
-aws s3 mb s3://leap-guard-frontend-<account-id> --region us-east-1
+aws s3 mb s3://leap-guard-frontend-<account-id> --region ap-southeast-1
 
 # Enable static website hosting
 aws s3 website s3://leap-guard-frontend-<account-id> \
@@ -986,7 +986,7 @@ aws s3api put-bucket-policy --bucket leap-guard-frontend-<account-id> \
     }'
 ```
 
-**Access URL:** `http://leap-guard-frontend-<account-id>.s3-website-us-east-1.amazonaws.com`
+**Access URL:** `http://leap-guard-frontend-<account-id>.s3-website-ap-southeast-1.amazonaws.com`
 
 ---
 
@@ -1045,7 +1045,7 @@ body {
 - [x] Test inference runs locally with sample data
 
 ### Phase 2 Checklist
-- [ ] Docker container builds and runs locally
+- [x] Docker container builds and runs locally
 - [ ] Lambda responds to test payload via SAM CLI
 - [ ] Lambda deployed and returns 200 from Function URL
 - [x] Bedrock call works and returns diagnosis text (mock mode tested)

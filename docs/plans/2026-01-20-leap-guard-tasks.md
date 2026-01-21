@@ -627,7 +627,7 @@ class BedrockDiagnostics:
 
         self.client = boto3.client(
             "bedrock-runtime",
-            region_name="us-east-1",
+            region_name="ap-southeast-1",
             config=config
         )
 
@@ -946,7 +946,7 @@ Resources:
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel
-              Resource: "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
+              Resource: "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
       Environment:
         Variables:
           MOCK_BEDROCK: "false"
@@ -994,7 +994,7 @@ git commit -m "chore: add SAM template and test event"
 **Step 1:** Create ECR repository
 
 ```bash
-aws ecr create-repository --repository-name leap-guard-inference --region us-east-1
+aws ecr create-repository --repository-name leap-guard-inference --region ap-southeast-1
 ```
 
 **Step 2:** Build with SAM
@@ -1008,7 +1008,7 @@ Run: `cd backend && sam deploy --guided`
 
 Answer prompts:
 - Stack Name: `leap-guard-inference`
-- Region: `us-east-1`
+- Region: `ap-southeast-1`
 - Confirm changes: `Y`
 - Allow SAM CLI IAM role creation: `Y`
 - InferenceFunction may not have authorization defined, Is this okay? `Y`
@@ -1968,7 +1968,7 @@ git commit -m "chore: add production environment config"
 **Step 1:** Create S3 bucket
 
 ```bash
-aws s3 mb s3://leap-guard-frontend-$(aws sts get-caller-identity --query Account --output text) --region us-east-1
+aws s3 mb s3://leap-guard-frontend-$(aws sts get-caller-identity --query Account --output text) --region ap-southeast-1
 ```
 
 **Step 2:** Enable static website hosting
@@ -2003,7 +2003,7 @@ aws s3api put-bucket-policy --bucket $BUCKET --policy '{
 **Step 5:** Get website URL
 
 ```bash
-echo "http://$BUCKET.s3-website-us-east-1.amazonaws.com"
+echo "http://$BUCKET.s3-website-ap-southeast-1.amazonaws.com"
 ```
 
 **Step 6:** Commit deployment scripts
