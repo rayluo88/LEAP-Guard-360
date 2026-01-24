@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo-placeholder.png" alt="LEAP-Guard 360" width="120" />
+  <img src="docs/assets/logo-leap.png" alt="LEAP-Guard 360" width="120" />
 </p>
 
 <h1 align="center">LEAP-Guard 360</h1>
