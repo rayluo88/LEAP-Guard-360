@@ -19,10 +19,10 @@
 
 <p align="center">
   <a href="#-live-demo">Live Demo</a> •
-  <a href="#-key-features">Features</a> •
-  <a href="#%EF%B8%8F-architecture">Architecture</a> •
-  <a href="#-getting-started">Getting Started</a> •
-  <a href="#-model-performance">Performance</a>
+  <a href="#key-features">Features</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#getting-started">Getting Started</a> •
+  <a href="#model-performance">Performance</a>
 </p>
 
 ---
