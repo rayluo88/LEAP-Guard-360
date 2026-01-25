@@ -27,6 +27,20 @@
 
 ---
 
+## 🚀 Live Demo
+
+<p align="center">
+  <a href="https://lg360.vercel.app">
+    <img src="https://img.shields.io/badge/▶_Try_Live_Demo-lg360.vercel.app-00C853?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+  </a>
+</p>
+
+> **Backend API:** `https://5r7w3jhzhhw4e43r7y36mru77q0zpamo.lambda-url.ap-southeast-1.on.aws/`
+>
+> *Note: First API call has ~60s cold start (Lambda loading PyTorch). Subsequent calls are fast (~3s).*
+
+---
+
 ## Overview
 
 **LEAP-Guard 360** is a full-stack predictive maintenance system that combines **LSTM-Autoencoder anomaly detection** with **AWS Bedrock GenAI diagnostics** to identify and explain turbofan engine degradation patterns.
@@ -79,8 +93,8 @@ This project demonstrates production-grade ML engineering practices for the avia
 │          │                                    │                            │
 │          ▼                                    ▼                            │
 │   ┌──────────────────┐         ┌──────────────────────────────────────┐    │
-│   │  S3 Static Host  │         │  Model Artifacts                     │    │
-│   │  (CloudFront)    │         │  • leap_guard_model.pth (260KB)      │    │
+│   │  Vercel Edge     │         │  Model Artifacts                     │    │
+│   │  (lg360.vercel)  │         │  • leap_guard_model.pth (260KB)      │    │
 │   └──────────────────┘         │  • leap_guard_scaler.pkl             │    │
 │                                │  • threshold.json / config.json      │    │
 │                                └──────────────────────────────────────┘    │
@@ -109,7 +123,7 @@ This project demonstrates production-grade ML engineering practices for the avia
 | **Container** | Docker → ECR → Lambda | Reproducible ML environment |
 | **Frontend** | React + TypeScript + Vite | Type-safe, modern tooling |
 | **Visualization** | Recharts | Time-series sensor graphs |
-| **Hosting** | S3 + CloudFront | Static hosting with global CDN |
+| **Hosting** | Vercel | Static hosting with global edge network |
 | **IaC** | AWS SAM | Serverless deployment automation |
 
 ---
@@ -170,8 +184,12 @@ leap-guard/
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/         # React components
+│   │   ├── components/
+│   │   │   ├── landing/        # Landing page (Header, Hero, Features, etc.)
+│   │   │   └── dashboard/      # Dashboard (Sidebar, SensorChart, ChatWindow)
+│   │   ├── pages/              # LandingPage, DashboardPage
 │   │   ├── hooks/              # Custom hooks (useInference)
+│   │   ├── data/               # Mock data generators
 │   │   └── types/              # TypeScript interfaces
 │   └── vite.config.ts
 │
@@ -238,12 +256,12 @@ cd backend/
 sam deploy --guided
 ```
 
-**3. Deploy Frontend:**
+**3. Deploy Frontend (Vercel):**
 ```bash
 cd frontend/
-npm run build
-aws s3 sync dist/ s3://leap-guard-frontend-<account-id> --delete
+vercel --prod
 ```
+Set `VITE_API_URL` environment variable in Vercel dashboard.
 
 ---
 
@@ -284,7 +302,7 @@ Architecture designed for **<$0.10/month** demo usage:
 | Service | Usage | Cost |
 |---------|-------|------|
 | Lambda | 500 requests/month | $0.00 (Free Tier) |
-| S3 | 100MB static hosting | $0.01 |
+| Vercel | Frontend hosting | $0.00 (Free Tier) |
 | Bedrock | 100 Claude Haiku queries | ~$0.05 |
 | ECR | 500MB container storage | $0.05 |
 | **Total** | | **~$0.10/month** |
