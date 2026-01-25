@@ -56,22 +56,16 @@ function generateSensorData(totalCycles: number): number[][] {
     const degradation = Math.pow(i / totalCycles, 2);
     const noise = () => (Math.random() - 0.5) * 0.1;
 
-    // 14 sensor values (matching model features)
+    // 8 sensor values (matching CMAPSS model features)
     const reading = [
-      0.5 + degradation * 0.3 + noise(),
-      0.5 + noise(),
-      0.5 + degradation * 0.2 + noise(),
-      0.5 + degradation * 0.15 + noise(),
-      0.5 + degradation * 0.4 + noise(),
-      0.5 + degradation * 0.25 + noise(),
-      0.5 + degradation * 0.1 + noise(),
-      0.5 + degradation * 0.2 + noise(),
-      0.5 + degradation * 0.35 + noise(),
-      0.5 + noise(),
-      0.5 + degradation * 0.15 + noise(),
-      0.5 + noise(),
-      0.5 + noise(),
-      0.5 + degradation * 0.2 + noise(),
+      0.5 + degradation * 0.3 + noise(), // N1_Fan_RPM
+      0.5 + noise(), // T25_LPC_Temp
+      0.5 + degradation * 0.2 + noise(), // N2_Core_RPM
+      0.5 + degradation * 0.15 + noise(), // T30_HPC_Temp
+      0.5 + degradation * 0.4 + noise(), // P30_HPC_Pressure
+      0.5 + degradation * 0.25 + noise(), // T50_LPT_Temp
+      0.5 + degradation * 0.1 + noise(), // Fuel_Flow
+      0.5 + degradation * 0.2 + noise(), // Vibration
     ];
 
     data.push(reading);

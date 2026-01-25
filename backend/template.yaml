@@ -5,8 +5,8 @@ Description: LEAP-Guard 360 Inference API
 
 Globals:
   Function:
-    Timeout: 30
-    MemorySize: 1024
+    Timeout: 60
+    MemorySize: 2048
 
 Resources:
   InferenceFunction:
@@ -21,8 +21,7 @@ Resources:
           AllowOrigins:
             - "*"
           AllowMethods:
-            - POST
-            - OPTIONS
+            - "*"
           AllowHeaders:
             - Content-Type
       Policies:
@@ -35,10 +34,7 @@ Resources:
       Environment:
         Variables:
           MOCK_BEDROCK: "false"
-    Metadata:
-      DockerTag: latest
-      DockerContext: .
-      Dockerfile: Dockerfile
+      ImageUri: 377133361984.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest
 
 Outputs:
   FunctionUrl:
