@@ -1,8 +1,8 @@
 # LEAP-Guard 360 Implementation Plan
 
-**Version:** 1.2
-**Last Updated:** 2025-01-24
-**Status:** Phase 2 Complete (Code), Phase 3 Pending
+**Version:** 1.3
+**Last Updated:** 2025-01-25
+**Status:** Phase 3 Complete (Backend + Frontend Deployed)
 **Approach:** Production-grade, Linear phasing (ML → Backend → Frontend)
 **Focus Areas:** ML/Model training, AWS infrastructure
 
@@ -234,7 +234,7 @@ with open('config.json', 'w') as f:
       "Action": [
         "bedrock:InvokeModel"
       ],
-      "Resource": "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-haiku-4-5-20251015-v1:0"
+      "Resource": "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
     },
     {
       "Effect": "Allow",
@@ -517,7 +517,7 @@ class BedrockDiagnostics:
             config=config
         )
 
-        self.model_id = "anthropic.claude-haiku-4-5-20251015-v1:0"
+        self.model_id = "anthropic.claude-3-haiku-20240307-v1:0"
         self.mock_mode = os.environ.get("MOCK_BEDROCK", "false").lower() == "true"
 
         self.sensor_descriptions = {
@@ -688,7 +688,7 @@ Resources:
             - Effect: Allow
               Action:
                 - bedrock:InvokeModel
-              Resource: "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-haiku-4-5-20251015-v1:0"
+              Resource: "arn:aws:bedrock:ap-southeast-1::foundation-model/anthropic.claude-3-haiku-20240307-v1:0"
       Environment:
         Variables:
           MOCK_BEDROCK: "false"
@@ -752,14 +752,45 @@ aws logs tail /aws/lambda/leap-guard-inference-InferenceFunction --follow
 
 ---
 
-## Phase 3: Frontend & Integration
+## Phase 3: Frontend & Integration (In Progress)
 
-### 3.1 Project Setup
+> **Design Reference:** See `docs/leap-guard-design.pen` for approved UI mockups (Landing Page + Dashboard)
+>
+> **Status:** Frontend UI implemented. Backend integration pending Lambda deployment.
+
+### 3.0 Design System ✅
+
+**Color Tokens:**
+| Token | Light Theme | Dark Theme (Dashboard) |
+|-------|-------------|------------------------|
+| Background Primary | `#FFFFFF` | `#0D0D0D` |
+| Background Secondary | `#F5F5F7` | `#1A1A1A` |
+| Background Tertiary | `#E5E5E7` | `#2A2A2A` |
+| Text Primary | `#1D1D1F` | `#FFFFFF` |
+| Text Secondary | `#86868B` | `#8E8E93` |
+| Accent Blue | `#007AFF` | `#007AFF` |
+| Success Green | `#32D583` | `#32D583` |
+| Warning Orange | `#FF9900` | `#FF9900` |
+| Alert Red | `#E85A4F` | `#E85A4F` |
+
+**Typography:**
+- Font Family: `'Inter', -apple-system, BlinkMacSystemFont, sans-serif`
+- Hero Headline: 56px, font-weight 700
+- Section Titles: 32px, font-weight 600
+- Body: 16-18px, font-weight 400
+
+**Layout Specifications:**
+- Landing Page: 1440px max-width, light theme
+- Dashboard: Full viewport, dark theme, 3-column grid (280px | 1fr | 320px)
+
+---
+
+### 3.1 Project Setup ✅
 
 ```bash
 npm create vite@latest frontend -- --template react-ts
 cd frontend
-npm install recharts axios
+npm install recharts axios lucide-react
 ```
 
 **Project structure:**
@@ -768,16 +799,29 @@ npm install recharts axios
 frontend/
 ├── src/
 │   ├── components/
-│   │   ├── Sidebar.tsx           # Threshold slider, engine selector
-│   │   ├── SensorChart.tsx       # Main Recharts visualization
-│   │   ├── ChatWindow.tsx        # Diagnosis display
-│   │   └── LoadingSpinner.tsx    # For cold start wait
+│   │   ├── landing/              # Landing page components
+│   │   │   ├── Header.tsx        # Nav with logo, links, CTA
+│   │   │   ├── Hero.tsx          # Headline, subheadline, dashboard preview
+│   │   │   ├── Features.tsx      # 3-card feature grid
+│   │   │   ├── Architecture.tsx  # Data flow diagram
+│   │   │   ├── Stats.tsx         # Key metrics (5s, 95%+, 100+ units)
+│   │   │   └── Footer.tsx        # Links and copyright
+│   │   ├── dashboard/            # Dashboard components
+│   │   │   ├── Sidebar.tsx       # Nav, engine selector, threshold slider
+│   │   │   ├── SensorChart.tsx   # Main Recharts visualization
+│   │   │   ├── ChatWindow.tsx    # AI Diagnostic Copilot panel
+│   │   │   └── StatusIndicator.tsx # Engine health status badge
+│   │   └── shared/
+│   │       └── LoadingSpinner.tsx
 │   ├── hooks/
 │   │   └── useInference.ts       # API call logic
 │   ├── types/
 │   │   └── api.ts                # TypeScript interfaces
 │   ├── data/
 │   │   └── testData.ts           # Embedded sample data for dev
+│   ├── pages/
+│   │   ├── LandingPage.tsx       # Marketing/intro page
+│   │   └── DashboardPage.tsx     # Main app interface
 │   ├── App.tsx
 │   ├── App.css
 │   └── main.tsx
@@ -788,7 +832,7 @@ frontend/
 
 ---
 
-### 3.2 Core Types
+### 3.2 Core Types ✅
 
 **`types/api.ts`:**
 
@@ -820,7 +864,7 @@ export interface EngineData {
 
 ---
 
-### 3.3 API Hook
+### 3.3 API Hook ✅
 
 **`hooks/useInference.ts`:**
 
@@ -856,7 +900,7 @@ export function useInference() {
 
 ---
 
-### 3.4 SensorChart Component
+### 3.4 SensorChart Component ✅
 
 ```typescript
 import { LineChart, Line, XAxis, YAxis, Tooltip, ReferenceArea, ResponsiveContainer } from 'recharts';
@@ -898,7 +942,7 @@ export function SensorChart({ data, anomalyRegions, onRegionClick }: Props) {
 
 ---
 
-### 3.5 ChatWindow Component
+### 3.5 ChatWindow Component ✅
 
 ```typescript
 interface Props {
@@ -942,7 +986,7 @@ export function ChatWindow({ diagnosis, loading, error }: Props) {
 
 ---
 
-### 3.6 Environment Configuration
+### 3.6 Environment Configuration ✅
 
 **`.env.local` (local development):**
 ```
@@ -956,61 +1000,80 @@ VITE_API_URL=https://xxx.lambda-url.ap-southeast-1.on.aws/
 
 ---
 
-### 3.7 S3 Deployment
+### 3.7 Vercel Deployment ✅
 
 ```bash
-# Build production bundle
-npm run build
+# Install Vercel CLI
+npm install -g vercel
 
-# Create S3 bucket (one-time)
-aws s3 mb s3://leap-guard-frontend-<account-id> --region ap-southeast-1
+# Login to Vercel
+vercel login
 
-# Enable static website hosting
-aws s3 website s3://leap-guard-frontend-<account-id> \
-    --index-document index.html \
-    --error-document index.html
+# Deploy (first time creates project)
+vercel --prod
 
-# Upload build
-aws s3 sync dist/ s3://leap-guard-frontend-<account-id> --delete
-
-# Set public read policy (for demo only)
-aws s3api put-bucket-policy --bucket leap-guard-frontend-<account-id> \
-    --policy '{
-      "Version": "2012-10-17",
-      "Statement": [{
-        "Effect": "Allow",
-        "Principal": "*",
-        "Action": "s3:GetObject",
-        "Resource": "arn:aws:s3:::leap-guard-frontend-<account-id>/*"
-      }]
-    }'
+# Set environment variable in Vercel dashboard:
+# VITE_API_URL = https://5r7w3jhzhhw4e43r7y36mru77q0zpamo.lambda-url.ap-southeast-1.on.aws/
 ```
 
-**Access URL:** `http://leap-guard-frontend-<account-id>.s3-website-ap-southeast-1.amazonaws.com`
+**Live URL:** https://lg360.vercel.app
+
+**Why Vercel over S3?**
+- Zero-config deployment for Vite projects
+- Free tier with generous limits
+- Automatic HTTPS and global CDN
+- Git integration for automatic deploys
 
 ---
 
-### 3.8 Styling (Dark Theme)
+### 3.8 Styling ✅
+
+> **Reference:** Matches approved design in `docs/leap-guard-design.pen`
 
 ```css
-/* App.css */
+/* App.css - Design tokens from approved Pencil mockups */
+
+/* Light Theme (Landing Page) */
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --text-primary: #f1f5f9;
-  --accent-blue: #3b82f6;
-  --alert-red: #ef4444;
-  --success-green: #22c55e;
+  --light-bg-primary: #FFFFFF;
+  --light-bg-secondary: #F5F5F7;
+  --light-bg-tertiary: #E5E5E7;
+  --light-text-primary: #1D1D1F;
+  --light-text-secondary: #86868B;
+}
+
+/* Dark Theme (Dashboard) */
+.dashboard {
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #1A1A1A;
+  --bg-tertiary: #2A2A2A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8E8E93;
+}
+
+/* Shared accent colors */
+:root {
+  --accent-blue: #007AFF;
+  --success-green: #32D583;
+  --warning-orange: #FF9900;
+  --alert-red: #E85A4F;
 }
 
 body {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   min-width: 1200px;
 }
 
+/* Landing Page - Light theme */
+.landing-page {
+  background: var(--light-bg-primary);
+  color: var(--light-text-primary);
+}
+
+/* Dashboard - Dark theme, 3-column layout */
 .dashboard {
+  background: var(--bg-primary);
+  color: var(--text-primary);
   display: grid;
   grid-template-columns: 280px 1fr 320px;
   gap: 1rem;
@@ -1018,8 +1081,9 @@ body {
   height: 100vh;
 }
 
+/* Chat panel styling */
 .chat-bubble {
-  background: var(--bg-secondary);
+  background: var(--bg-tertiary);
   border-radius: 12px;
   padding: 1rem;
   margin-bottom: 0.5rem;
@@ -1046,14 +1110,27 @@ body {
 
 ### Phase 2 Checklist
 - [x] Docker container builds and runs locally
-- [ ] Lambda responds to test payload via SAM CLI
-- [ ] Lambda deployed and returns 200 from Function URL
+- [x] Lambda responds to test payload via SAM CLI
+- [x] Lambda deployed and returns 200 from Function URL
 - [x] Bedrock call works and returns diagnosis text (mock mode tested)
-- [ ] CloudWatch logs visible and showing execution details
+- [x] CloudWatch logs visible and showing execution details
+
+**Deployed Resources:**
+- Lambda Function URL: `https://5r7w3jhzhhw4e43r7y36mru77q0zpamo.lambda-url.ap-southeast-1.on.aws/`
+- ECR Repository: `377133361984.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference`
+- Lambda Config: 60s timeout, 2048MB memory
+- Cold start: ~57s, Warm invocation: ~3-4s
 
 ### Phase 3 Checklist
-- [ ] `npm run dev` starts local server without errors
-- [ ] Graph renders with sample data
-- [ ] "Diagnose" button triggers Lambda call and displays response
-- [ ] Frontend deployed to S3 and accessible via public URL
-- [ ] CORS configured correctly (no console errors)
+- [x] `npm run dev` starts local server without errors
+- [x] Landing page matches approved design (light theme, Apple-style)
+- [x] Dashboard matches approved design (dark theme, 3-column layout)
+- [x] Graph renders with sample data and anomaly regions
+- [x] Click anomaly region triggers Lambda call and displays diagnosis
+- [x] AI Diagnostic Copilot panel shows response with sensor contributions
+- [x] Frontend deployed to Vercel and accessible via public URL
+- [x] CORS configured correctly (no console errors)
+
+**Live Deployment:**
+- Frontend: https://lg360.vercel.app
+- Backend API: https://5r7w3jhzhhw4e43r7y36mru77q0zpamo.lambda-url.ap-southeast-1.on.aws/

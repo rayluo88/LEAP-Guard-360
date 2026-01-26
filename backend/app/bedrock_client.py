@@ -15,7 +15,7 @@ class BedrockDiagnostics:
             config=config
         )
 
-        self.model_id = "anthropic.claude-haiku-4-5-20251015-v1:0"
+        self.model_id = "anthropic.claude-3-haiku-20240307-v1:0"
         self.mock_mode = os.environ.get("MOCK_BEDROCK", "false").lower() == "true"
 
         # Sensor descriptions matching actual model features
