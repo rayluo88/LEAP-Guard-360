@@ -15,7 +15,12 @@ class BedrockDiagnostics:
             config=config
         )
 
-        self.model_id = "anthropic.claude-3-haiku-20240307-v1:0"
+        # Default to an inference-profile model that's already enabled in the account.
+        # Override with BEDROCK_MODEL_ID if needed (e.g., Anthropic Claude).
+        self.model_id = os.environ.get(
+            "BEDROCK_MODEL_ID",
+            "apac.amazon.nova-micro-v1:0"
+        )
         self.mock_mode = os.environ.get("MOCK_BEDROCK", "false").lower() == "true"
 
         # Sensor descriptions matching actual model features
@@ -60,19 +65,33 @@ Based on these sensor patterns, provide:
 Keep your response under 100 words. Use technical but accessible language suitable for an MRO engineer."""
 
         try:
-            response = self.client.invoke_model(
+            if "anthropic" in self.model_id:
+                response = self.client.invoke_model(
+                    modelId=self.model_id,
+                    contentType="application/json",
+                    accept="application/json",
+                    body=json.dumps({
+                        "anthropic_version": "bedrock-2023-05-31",
+                        "max_tokens": 200,
+                        "temperature": 0.3,
+                        "messages": [{"role": "user", "content": prompt}]
+                    })
+                )
+                result = json.loads(response["body"].read())
+                return result["content"][0]["text"]
+
+            response = self.client.converse(
                 modelId=self.model_id,
-                contentType="application/json",
-                accept="application/json",
-                body=json.dumps({
-                    "anthropic_version": "bedrock-2023-05-31",
-                    "max_tokens": 200,
-                    "temperature": 0.3,
-                    "messages": [{"role": "user", "content": prompt}]
-                })
+                messages=[{
+                    "role": "user",
+                    "content": [{"text": prompt}]
+                }],
+                inferenceConfig={
+                    "maxTokens": 200,
+                    "temperature": 0.3
+                }
             )
-            result = json.loads(response["body"].read())
-            return result["content"][0]["text"]
+            return response["output"]["message"]["content"][0]["text"]
         except Exception as e:
             print(f"Bedrock error: {e}")
             return None

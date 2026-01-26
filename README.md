@@ -50,7 +50,7 @@ This project demonstrates production-grade ML engineering practices for the avia
 | Capability | Implementation |
 |------------|----------------|
 | **Anomaly Detection** | LSTM-Autoencoder trained on NASA CMAPSS turbofan dataset |
-| **Explainable AI** | AWS Bedrock (Claude Haiku 4.5) generates natural language diagnostics |
+| **Explainable AI** | AWS Bedrock (configurable; default Nova Micro inference profile) |
 | **Cloud Architecture** | Serverless Lambda + S3 with cost optimization (<$0.10/month) |
 | **Frontend** | React + TypeScript dashboard with real-time sensor visualization |
 
@@ -119,7 +119,7 @@ This project demonstrates production-grade ML engineering practices for the avia
 | **ML Model** | PyTorch LSTM-Autoencoder | Captures temporal degradation patterns in sequence data |
 | **Training** | Google Colab (T4 GPU) | Free GPU compute for model development |
 | **Backend** | Python 3.12 + Lambda | Serverless inference, zero idle cost |
-| **GenAI** | AWS Bedrock (Claude Haiku 4.5) | Low-latency, cost-effective |
+| **GenAI** | AWS Bedrock (configurable; default Nova Micro) | Low-latency, cost-effective |
 | **Container** | Docker → ECR → Lambda | Reproducible ML environment |
 | **Frontend** | React + TypeScript + Vite | Type-safe, modern tooling |
 | **Visualization** | Recharts | Time-series sensor graphs |
@@ -238,6 +238,7 @@ export MOCK_BEDROCK=true
 ```
 
 Note: `template.yaml` uses a prebuilt ECR image for deployment. Use `template.local.yaml` for local SAM builds/invocations.
+To override the default Bedrock model, set `BEDROCK_MODEL_ID` (e.g., an Anthropic Claude inference profile once approved).
 
 **Backend (Makefile shortcuts):**
 ```bash
