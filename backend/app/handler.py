@@ -41,7 +41,6 @@ def lambda_handler(event, context):
             "statusCode": 200,
             "headers": {
                 "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
             },
             "body": response.model_dump_json()
         }
