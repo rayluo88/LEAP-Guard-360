@@ -9,10 +9,11 @@ import {
 import type { AnomalyRegion } from "../types/api";
 
 const TOTAL_CYCLES = 250;
-const WINDOW_SIZE = 50;
+const WINDOW_SIZE = 10;
+const DEFAULT_THRESHOLD = 0.12;
 
 export function DashboardPage() {
-  const [threshold, setThreshold] = useState(0.7);
+  const [threshold, setThreshold] = useState(DEFAULT_THRESHOLD);
   const [selectedRegion, setSelectedRegion] = useState<AnomalyRegion | null>(
     null,
   );
@@ -79,6 +80,7 @@ export function DashboardPage() {
         error={error}
         anomalyScore={result?.anomaly_score ?? null}
         sensorContributions={result?.sensor_contributions ?? null}
+        threshold={result?.threshold ?? threshold}
       />
     </div>
   );

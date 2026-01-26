@@ -51,9 +51,9 @@ export function Sidebar({
         <h3>Anomaly Threshold</h3>
         <input
           type="range"
-          min="0.5"
-          max="1.0"
-          step="0.05"
+          min="0.05"
+          max="0.2"
+          step="0.01"
           value={threshold}
           onChange={(e) => onThresholdChange(parseFloat(e.target.value))}
           className="threshold-slider"

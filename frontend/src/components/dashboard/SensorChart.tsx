@@ -53,12 +53,24 @@ export function SensorChart({
             stroke="#8E8E93"
             tick={{ fill: "#8E8E93" }}
             axisLine={{ stroke: "#3A3A3A" }}
+            label={{
+              value: "Flight Cycle",
+              position: "insideBottom",
+              offset: -10,
+              fill: "#8E8E93",
+            }}
           />
           <YAxis
             stroke="#8E8E93"
             tick={{ fill: "#8E8E93" }}
             axisLine={{ stroke: "#3A3A3A" }}
             domain={[0.4, 1]}
+            label={{
+              value: "Sensor Reading",
+              angle: -90,
+              position: "insideLeft",
+              fill: "#8E8E93",
+            }}
           />
           <Tooltip
             contentStyle={{

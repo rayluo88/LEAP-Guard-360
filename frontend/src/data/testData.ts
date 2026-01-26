@@ -77,7 +77,7 @@ function generateSensorData(totalCycles: number): number[][] {
 // Get sensor readings for a window
 export function getWindowReadings(
   startCycle: number,
-  windowSize: number = 50,
+  windowSize: number = 10,
 ): number[][] {
   const totalCycles = 250;
   const allData = generateSensorData(totalCycles);

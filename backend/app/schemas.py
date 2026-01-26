@@ -4,7 +4,7 @@ from typing import Optional
 
 class PredictRequest(BaseModel):
     sensor_readings: list[list[float]]
-    window_size: int = Field(default=50, ge=10, le=100)
+    window_size: int = Field(default=10, ge=10, le=100)
     threshold: Optional[float] = Field(default=None, ge=0.0, le=1.0)
 
     @field_validator("sensor_readings")

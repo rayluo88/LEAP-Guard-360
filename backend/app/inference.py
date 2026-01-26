@@ -56,7 +56,12 @@ class AnomalyDetector:
         threshold = threshold or self.default_threshold
 
         X = np.array(sensor_readings)
-        expected_shape = (window_size, self.config["n_features"])
+        expected_len = self.config["input_sequence_length"]
+        if window_size != expected_len:
+            raise ValueError(
+                f"window_size must match model sequence length ({expected_len}), got {window_size}"
+            )
+        expected_shape = (expected_len, self.config["n_features"])
         if X.shape != expected_shape:
             raise ValueError(f"Expected shape {expected_shape}, got {X.shape}")
 

@@ -219,17 +219,31 @@ leap-guard/
 **Backend (Lambda):**
 ```bash
 cd backend/
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 
 # Run tests
 pytest tests/
 
 # Local Lambda invocation
-sam build
-sam local invoke InferenceFunction -e events/test_event.json
+sam build -t template.local.yaml
+sam local invoke InferenceFunction -t .aws-sam/build/template.yaml -e events/test_event.json
+
+# Trigger an anomaly + mock diagnosis
+sam local invoke InferenceFunction -t .aws-sam/build/template.yaml -e events/test_event_anomaly.json
 
 # Mock Bedrock for offline development
 export MOCK_BEDROCK=true
+```
+
+Note: `template.yaml` uses a prebuilt ECR image for deployment. Use `template.local.yaml` for local SAM builds/invocations.
+
+**Backend (Makefile shortcuts):**
+```bash
+cd backend/
+make install
+make test
 ```
 
 **Frontend:**
@@ -262,6 +276,46 @@ cd frontend/
 vercel --prod
 ```
 Set `VITE_API_URL` environment variable in Vercel dashboard.
+
+---
+
+## Production Verification
+
+### 6-Step End-to-End Checklist (Vercel Demo)
+
+**1) Backend deploy is current**
+- Rebuild/push the backend container and update Lambda to the latest image.
+- Confirm `MOCK_BEDROCK=false` in production.
+- Ensure Bedrock permissions allow `bedrock:InvokeModel`.
+
+**2) Lambda URL CORS is correct**
+```bash
+curl -i -X OPTIONS https://<lambda-url>/ \
+  -H 'Origin: https://<vercel-domain>' \
+  -H 'Access-Control-Request-Method: POST'
+```
+Expect `Access-Control-Allow-Origin` in the response.
+
+**3) Vercel env vars**
+- `VITE_API_URL = https://<lambda-url>/`
+- Trigger a redeploy after updating env vars.
+
+**4) API health check (prod)**
+```bash
+scripts/verify_prod.sh https://<lambda-url>/
+# or
+VITE_API_URL=https://<lambda-url>/ scripts/verify_prod.sh
+```
+
+**5) Vercel UI test**
+- Visit `https://<vercel-domain>/dashboard`
+- Click a red anomaly region
+- Confirm a Diagnosis appears in the AI Diagnostic Copilot panel
+
+**6) If diagnosis doesn’t show**
+- Network error → verify CORS + `VITE_API_URL`
+- 200 but `diagnosis: null` → threshold too high or `is_anomaly=false`
+- 500 → Bedrock permissions/region/model ID mismatch
 
 ---
 

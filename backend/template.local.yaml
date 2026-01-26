@@ -1,0 +1,35 @@
+# backend/template.local.yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: LEAP-Guard 360 Inference API (Local Dev)
+
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 2048
+  Api:
+    Cors:
+      AllowOrigin: "'*'"
+      AllowHeaders: "'*'"
+      AllowMethods: "'*'"
+
+Resources:
+  InferenceFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: .
+      DockerTag: leap-guard-local
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Events:
+        RootPost:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
+      Environment:
+        Variables:
+          MOCK_BEDROCK: "true"

@@ -6,6 +6,7 @@ interface Props {
   error: string | null;
   anomalyScore: number | null;
   sensorContributions: Record<string, number> | null;
+  threshold: number | null;
 }
 
 export function ChatWindow({
@@ -14,6 +15,7 @@ export function ChatWindow({
   error,
   anomalyScore,
   sensorContributions,
+  threshold,
 }: Props) {
   return (
     <aside className="chat-window">
@@ -61,7 +63,13 @@ export function ChatWindow({
           <div className="chat-bubble stats">
             <div className="stat-row">
               <span>Anomaly Score</span>
-              <span className={anomalyScore > 0.7 ? "high" : "normal"}>
+              <span
+                className={
+                  threshold !== null && anomalyScore > threshold
+                    ? "high"
+                    : "normal"
+                }
+              >
                 {anomalyScore.toFixed(4)}
               </span>
             </div>

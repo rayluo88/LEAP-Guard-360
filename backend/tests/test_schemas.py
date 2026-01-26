@@ -1,26 +1,29 @@
 import pytest
 from app.schemas import PredictRequest, PredictResponse
 
+N_FEATURES = 8
+WINDOW_SIZE = 10
+
 def test_predict_request_valid():
     request = PredictRequest(
-        sensor_readings=[[1.0] * 14] * 50,
-        window_size=50,
-        threshold=0.7
+        sensor_readings=[[1.0] * N_FEATURES] * WINDOW_SIZE,
+        window_size=WINDOW_SIZE,
+        threshold=0.12
     )
-    assert request.window_size == 50
-    assert request.threshold == 0.7
+    assert request.window_size == WINDOW_SIZE
+    assert request.threshold == 0.12
 
 def test_predict_request_defaults():
     request = PredictRequest(
-        sensor_readings=[[1.0] * 14] * 50
+        sensor_readings=[[1.0] * N_FEATURES] * WINDOW_SIZE
     )
-    assert request.window_size == 50
+    assert request.window_size == WINDOW_SIZE
     assert request.threshold is None
 
 def test_predict_request_invalid_window():
     with pytest.raises(ValueError):
         PredictRequest(
-            sensor_readings=[[1.0] * 14] * 50,
+            sensor_readings=[[1.0] * N_FEATURES] * WINDOW_SIZE,
             window_size=5  # Below minimum of 10
         )
 
