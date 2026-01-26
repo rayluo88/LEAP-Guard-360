@@ -1042,6 +1042,38 @@ git commit -m "chore: add SAM deployment config"
 
 ## Phase 3: Frontend & Integration
 
+> **Design Reference:** See `docs/leap-guard-design.pen` for approved UI mockups
+
+### Design System (from approved Pencil design)
+
+**Color Tokens:**
+```css
+/* Light Theme (Landing Page) */
+--light-bg-primary: #FFFFFF;
+--light-bg-secondary: #F5F5F7;
+--light-text-primary: #1D1D1F;
+--light-text-secondary: #86868B;
+
+/* Dark Theme (Dashboard) */
+--bg-primary: #0D0D0D;
+--bg-secondary: #1A1A1A;
+--bg-tertiary: #2A2A2A;
+--text-primary: #FFFFFF;
+--text-secondary: #8E8E93;
+
+/* Accent Colors */
+--accent-blue: #007AFF;
+--success-green: #32D583;
+--warning-orange: #FF9900;
+--alert-red: #E85A4F;
+```
+
+**Pages to Implement:**
+1. **Landing Page** - Light theme, marketing/intro (1440px max-width)
+2. **Dashboard Page** - Dark theme, main app interface (full viewport, 3-column grid)
+
+---
+
 ### Task 3.1: Initialize React Project
 
 **Step 1:** Create Vite project
@@ -1055,7 +1087,7 @@ npm install
 **Step 2:** Install dependencies
 
 ```bash
-npm install recharts axios
+npm install recharts axios lucide-react react-router-dom
 npm install -D @types/node
 ```
 
@@ -1668,20 +1700,34 @@ function App() {
 export default App;
 ```
 
-**Step 2:** Update App.css (dark theme)
+**Step 2:** Update App.css (Apple-inspired design from approved mockups)
 
 ```css
-/* frontend/src/App.css */
+/* frontend/src/App.css - Design tokens from docs/leap-guard-design.pen */
+
+/* Light Theme (Landing Page) */
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --accent-blue: #3b82f6;
-  --alert-red: #ef4444;
-  --success-green: #22c55e;
-  --border: #475569;
+  --light-bg-primary: #FFFFFF;
+  --light-bg-secondary: #F5F5F7;
+  --light-bg-tertiary: #E5E5E7;
+  --light-text-primary: #1D1D1F;
+  --light-text-secondary: #86868B;
+
+  /* Shared accent colors */
+  --accent-blue: #007AFF;
+  --success-green: #32D583;
+  --warning-orange: #FF9900;
+  --alert-red: #E85A4F;
+}
+
+/* Dark Theme (Dashboard) */
+.dashboard {
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #1A1A1A;
+  --bg-tertiary: #2A2A2A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8E8E93;
+  --border: #3A3A3A;
 }
 
 * {
@@ -2040,7 +2086,10 @@ git commit -m "chore: complete frontend deployment"
 - [ ] Bedrock returns diagnoses
 
 ### Phase 3
-- [ ] Dev server runs
-- [ ] Chart renders with mock data
-- [ ] API integration works
-- [ ] Deployed to S3
+- [ ] Dev server runs (`npm run dev`)
+- [ ] Landing page matches approved design (light theme, Apple-style)
+- [ ] Dashboard matches approved design (dark theme, 3-column layout)
+- [ ] Chart renders with anomaly regions highlighted
+- [ ] Click anomaly triggers API call and shows diagnosis
+- [ ] AI Diagnostic Copilot panel shows sensor contributions
+- [ ] Deployed to S3 with CORS working

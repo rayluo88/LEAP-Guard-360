@@ -20,6 +20,12 @@ venv/
 # OS
 .DS_Store
 
+# AWS SAM
+.aws-sam/
+
+# Vercel
+.vercel/
+
 # Model artifacts (large files)
 *.pt
 #*.pkl
