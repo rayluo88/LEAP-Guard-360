@@ -87,7 +87,7 @@ This project demonstrates production-grade ML engineering practices for the avia
 │   │   Dashboard      │────────▶│                                      │    │
 │   │                  │◀────────│  ┌────────────┐    ┌─────────────┐   │    │
 │   │  • Sensor Graphs │  JSON   │  │   LSTM     │    │   Bedrock   │   │    │
-│   │  • Anomaly Viz   │         │  │ Autoencoder│───▶│(Haiku 4.5)  │   │    │
+│   │  • Anomaly Viz   │         │  │ Autoencoder│───▶│(Nova Micro)│   │    │
 │   │  • Chat UI       │         │  └────────────┘    └─────────────┘   │    │
 │   └──────────────────┘         └──────────────────────────────────────┘    │
 │          │                                    │                            │
@@ -260,9 +260,10 @@ npm run dev  # http://localhost:5173
 ```bash
 aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com
 
-docker build -t leap-guard-inference backend/
-docker tag leap-guard-inference:latest <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest
-docker push <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest
+# Build/push a Lambda-compatible manifest (avoid OCI index)
+docker buildx build --platform linux/amd64 --provenance=false \
+  -t <account-id>.dkr.ecr.ap-southeast-1.amazonaws.com/leap-guard-inference:latest \
+  --push backend
 ```
 
 **2. Deploy Lambda:**
@@ -358,7 +359,7 @@ Architecture designed for **<$0.10/month** demo usage:
 |---------|-------|------|
 | Lambda | 500 requests/month | $0.00 (Free Tier) |
 | Vercel | Frontend hosting | $0.00 (Free Tier) |
-| Bedrock | 100 Claude Haiku queries | ~$0.05 |
+| Bedrock | 100 Nova Micro queries | ~$0.05 |
 | ECR | 500MB container storage | $0.05 |
 | **Total** | | **~$0.10/month** |
 
