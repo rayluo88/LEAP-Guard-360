@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { LayoutDashboard, BarChart3, Settings, Home } from "lucide-react";
+import type { EngineProfile } from "../../data/testData";
 
 interface Props {
   threshold: number;
   onThresholdChange: (value: number) => void;
   engineId: string;
+  onEngineChange: (engineId: string) => void;
+  engines: EngineProfile[];
   isAnomaly: boolean;
 }
 
@@ -12,8 +15,11 @@ export function Sidebar({
   threshold,
   onThresholdChange,
   engineId,
+  onEngineChange,
+  engines,
   isAnomaly,
 }: Props) {
+  const currentEngine = engines.find((e) => e.id === engineId);
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
@@ -42,9 +48,27 @@ export function Sidebar({
 
       <div className="sidebar-section">
         <h3>Engine</h3>
-        <select className="engine-select" defaultValue={engineId}>
-          <option value={engineId}>{engineId}</option>
+        <select
+          className="engine-select"
+          value={engineId}
+          onChange={(e) => onEngineChange(e.target.value)}
+        >
+          {engines.map((engine) => (
+            <option key={engine.id} value={engine.id}>
+              {engine.id}
+            </option>
+          ))}
         </select>
+        {currentEngine && (
+          <div className="engine-info">
+            <span className="engine-aircraft">
+              {currentEngine.aircraftType}
+            </span>
+            <span className="engine-cycles">
+              {currentEngine.totalCycles} cycles
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="sidebar-section">

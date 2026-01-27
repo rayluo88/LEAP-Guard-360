@@ -5,21 +5,29 @@ import {
   generateChartData,
   identifyAnomalyRegions,
   getWindowReadings,
+  ENGINE_PROFILES,
+  getEngineProfile,
 } from "../data/testData";
 import type { AnomalyRegion } from "../types/api";
 
-const TOTAL_CYCLES = 250;
 const WINDOW_SIZE = 10;
 const DEFAULT_THRESHOLD = 0.12;
+const DEFAULT_ENGINE = ENGINE_PROFILES[0].id;
 
 export function DashboardPage() {
   const [threshold, setThreshold] = useState(DEFAULT_THRESHOLD);
+  const [selectedEngineId, setSelectedEngineId] = useState(DEFAULT_ENGINE);
   const [selectedRegion, setSelectedRegion] = useState<AnomalyRegion | null>(
     null,
   );
   const { predict, loading, error, result, reset } = useInference();
 
-  const chartData = useMemo(() => generateChartData(TOTAL_CYCLES), []);
+  const currentEngine = getEngineProfile(selectedEngineId);
+
+  const chartData = useMemo(
+    () => generateChartData(currentEngine.totalCycles, selectedEngineId),
+    [selectedEngineId, currentEngine.totalCycles],
+  );
   const anomalyRegions = useMemo(
     () => identifyAnomalyRegions(chartData, 0.05),
     [chartData],
@@ -30,7 +38,7 @@ export function DashboardPage() {
       setSelectedRegion({ start, end });
       reset();
 
-      const readings = getWindowReadings(end, WINDOW_SIZE);
+      const readings = getWindowReadings(end, WINDOW_SIZE, selectedEngineId);
 
       if (readings.length < WINDOW_SIZE) {
         return;
@@ -42,7 +50,16 @@ export function DashboardPage() {
         threshold,
       });
     },
-    [predict, reset, threshold],
+    [predict, reset, threshold, selectedEngineId],
+  );
+
+  const handleEngineChange = useCallback(
+    (engineId: string) => {
+      setSelectedEngineId(engineId);
+      setSelectedRegion(null);
+      reset();
+    },
+    [reset],
   );
 
   const handleThresholdChange = useCallback(
@@ -61,7 +78,9 @@ export function DashboardPage() {
       <Sidebar
         threshold={threshold}
         onThresholdChange={handleThresholdChange}
-        engineId="LEAP-1A-001"
+        engineId={selectedEngineId}
+        onEngineChange={handleEngineChange}
+        engines={ENGINE_PROFILES}
         isAnomaly={isAnomaly}
       />
 
